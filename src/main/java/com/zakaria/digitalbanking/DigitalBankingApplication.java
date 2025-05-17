@@ -1,14 +1,12 @@
 package com.zakaria.digitalbanking;
 
-import com.zakaria.digitalbanking.entities.AccountOperation;
-import com.zakaria.digitalbanking.entities.CurrentAccount;
-import com.zakaria.digitalbanking.entities.Customer;
-import com.zakaria.digitalbanking.entities.SavingAccount;
+import com.zakaria.digitalbanking.entities.*;
 import com.zakaria.digitalbanking.enums.AccountStatus;
 import com.zakaria.digitalbanking.enums.OperationType;
 import com.zakaria.digitalbanking.repositories.AccountOperationRepository;
 import com.zakaria.digitalbanking.repositories.BankAccountRepository;
 import com.zakaria.digitalbanking.repositories.CustomerRepository;
+import com.zakaria.digitalbanking.sevices.BankService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -24,8 +22,14 @@ public class DigitalBankingApplication {
     public static void main(String[] args) {
         SpringApplication.run(DigitalBankingApplication.class, args);
     }
-
     @Bean
+    CommandLineRunner commandLineRunner(BankService bankService){
+        return args -> {
+            bankService.consulter();
+        };
+    }
+
+    //@Bean
     CommandLineRunner start(CustomerRepository customerRepository,
                             BankAccountRepository bankAccountRepository,
                             AccountOperationRepository accountOperationRepository) {
@@ -66,6 +70,7 @@ public class DigitalBankingApplication {
                     accountOperationRepository.save(accountOperation);
                 }
             });
+
         };
     }
 }

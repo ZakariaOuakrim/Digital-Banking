@@ -24,6 +24,8 @@ public abstract class BankAccount {
     private AccountStatus status;
     @ManyToOne
     private Customer customer;
-    @OneToMany(mappedBy = "bankAccount")
+    // the eager fetch type is used to load the account operations when we load the bank account but we
+    // need to avoid using it fills the memory with data
+    @OneToMany(mappedBy = "bankAccount", fetch = FetchType.LAZY)
     private List<AccountOperation> accountOperation;
 }
