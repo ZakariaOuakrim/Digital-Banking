@@ -4,6 +4,8 @@ import com.zakaria.digitalbanking.entities.BankAccount;
 import com.zakaria.digitalbanking.entities.CurrentAccount;
 import com.zakaria.digitalbanking.entities.Customer;
 import com.zakaria.digitalbanking.entities.SavingAccount;
+import com.zakaria.digitalbanking.exceptions.BalanceNotSufficientException;
+import com.zakaria.digitalbanking.exceptions.BankAccountNotFoundException;
 import com.zakaria.digitalbanking.exceptions.CustomerNotFoundException;
 import com.zakaria.digitalbanking.repositories.AccountOperationRepository;
 import com.zakaria.digitalbanking.repositories.BankAccountRepository;
@@ -39,24 +41,42 @@ public class BankAccountServiceImpl implements BankAccountService{
     }
 
     @Override
-    public BankAccount saveBankAccount(double initialBalance, String accountType, Long customerId) {
+    public CurrentAccount saveCurrentBankAccount(double initialBalance, double overDraft, Long customerId) throws CustomerNotFoundException {
         Customer customer=customerRepository.findById(customerId).orElse(null);
         if(customer==null){
             throw new CustomerNotFoundException("Customer not found");
         }
 
-        BankAccount bankAccount;
-        if(accountType.equals("current")){
-            bankAccount=new CurrentAccount();
-        }else{
-            bankAccount=new SavingAccount();
-        }
-        bankAccount.setId(UUID.randomUUID().toString());
-        bankAccount.setCreatedAt(new Date());
-        bankAccount.setBalance(initialBalance);
+        CurrentAccount currentAccount=new CurrentAccount();
 
-        return null;
+        currentAccount.setId(UUID.randomUUID().toString());
+        currentAccount.setCreatedAt(new Date());
+        currentAccount.setBalance(initialBalance);
+        currentAccount.setCustomer(customer);
+        currentAccount.setOverDraft(overDraft);
+
+        CurrentAccount savedBankedAccount=bankAccountRepository.save(currentAccount);
+        return savedBankedAccount;
     }
+
+    @Override
+    public SavingAccount saveSavingBankAccount(double initialBalance, double interestRate, Long customerId) throws CustomerNotFoundException {
+        Customer customer=customerRepository.findById(customerId).orElse(null);
+        if(customer==null){
+            throw new CustomerNotFoundException("Customer not found");
+        }
+        SavingAccount savingAccount=new SavingAccount();
+
+        savingAccount.setId(UUID.randomUUID().toString());
+        savingAccount.setCreatedAt(new Date());
+        savingAccount.setBalance(initialBalance);
+        savingAccount.setCustomer(customer);
+        savingAccount.setInterestRate(interestRate);
+
+        SavingAccount savedBankedAccount=bankAccountRepository.save(savingAccount);
+        return savedBankedAccount;
+    }
+
 
     @Override
     public List<Customer> listCustomers() {
@@ -64,12 +84,20 @@ public class BankAccountServiceImpl implements BankAccountService{
     }
 
     @Override
-    public BankAccount getBankAccount(String customerId) {
-        return null;
+    public BankAccount getBankAccount(String customerId) throws BankAccountNotFoundException {
+        BankAccount bankAccount=bankAccountRepository.findById(customerId)
+                .orElseThrow(()->new BankAccountNotFoundException("Bank account not found"));
+
+        return bankAccount;
     }
 
     @Override
-    public void debit(String accountId, double amount, String description) {
+    public void debit(String accountId, double amount, String description) throws BankAccountNotFoundException {
+        BankAccount bankAccount=getBankAccount(accountId);
+        if(bankAccount.getBalance()<amount){
+            throw new BalanceNotSufficientException("Insufficient balance");
+        }
+
 
     }
 
