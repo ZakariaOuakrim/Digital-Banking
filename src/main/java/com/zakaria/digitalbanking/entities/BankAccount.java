@@ -13,11 +13,14 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "TYPE", length = 4)
 @AllArgsConstructor @NoArgsConstructor @Data
-public class BankAccount {
+// the class is abstract because we don't want to create a table for it
+public abstract class BankAccount {
     @Id
     private String id;
     private  double balance;
     private Date createdAt;
+    // this annotation is used so we will store the status as string not integer
+    @Enumerated(EnumType.STRING)
     private AccountStatus status;
     @ManyToOne
     private Customer customer;

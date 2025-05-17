@@ -8,12 +8,13 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 @Entity
-@Data @AllArgsConstructor @NoArgsConstructor
+@AllArgsConstructor @NoArgsConstructor @Data
 public class AccountOperation {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Date operationDate;
     private double amount;
+    @Enumerated(EnumType.STRING)
     private OperationType operationType;
     @ManyToOne
     private BankAccount bankAccount;
