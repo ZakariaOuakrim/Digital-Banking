@@ -1,6 +1,7 @@
 package com.zakaria.digitalbanking.exceptions;
 
-public class BalanceNotSufficientException extends Throwable {
-    public BalanceNotSufficientException(String insufficientBalance) {
+public class BalanceNotSufficientException extends Exception {
+    public BalanceNotSufficientException(String message) {
+        super(message);
     }
 }

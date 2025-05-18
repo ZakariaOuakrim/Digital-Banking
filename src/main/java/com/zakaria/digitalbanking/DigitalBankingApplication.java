@@ -3,9 +3,11 @@ package com.zakaria.digitalbanking;
 import com.zakaria.digitalbanking.entities.*;
 import com.zakaria.digitalbanking.enums.AccountStatus;
 import com.zakaria.digitalbanking.enums.OperationType;
+import com.zakaria.digitalbanking.exceptions.CustomerNotFoundException;
 import com.zakaria.digitalbanking.repositories.AccountOperationRepository;
 import com.zakaria.digitalbanking.repositories.BankAccountRepository;
 import com.zakaria.digitalbanking.repositories.CustomerRepository;
+import com.zakaria.digitalbanking.sevices.BankAccountService;
 import com.zakaria.digitalbanking.sevices.BankService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -23,9 +25,24 @@ public class DigitalBankingApplication {
         SpringApplication.run(DigitalBankingApplication.class, args);
     }
     @Bean
-    CommandLineRunner commandLineRunner(BankService bankService){
+    CommandLineRunner commandLineRunner(BankAccountService bankAccountService){
         return args -> {
-            bankService.consulter();
+            Stream.of("Hassan","Zakaria","Aicha").forEach(name -> {
+                Customer customer = new Customer();
+                customer.setName(name);
+                customer.setEmail(name + "@gmail.com");
+                bankAccountService.saveCurstomer(customer);
+            });
+            bankAccountService.listCustomers().forEach(cust -> {
+                try {
+                    bankAccountService.saveCurrentBankAccount(Math.random() * 90000, 900, cust.getId());
+                    bankAccountService.saveSavingBankAccount(Math.random() * 90000, 5.5, cust.getId());
+
+                } catch (CustomerNotFoundException e) {
+                    e.printStackTrace();
+                }
+            });
+            
         };
     }
 

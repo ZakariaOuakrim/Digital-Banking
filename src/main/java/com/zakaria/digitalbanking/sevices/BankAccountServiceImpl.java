@@ -1,9 +1,7 @@
 package com.zakaria.digitalbanking.sevices;
 
-import com.zakaria.digitalbanking.entities.BankAccount;
-import com.zakaria.digitalbanking.entities.CurrentAccount;
-import com.zakaria.digitalbanking.entities.Customer;
-import com.zakaria.digitalbanking.entities.SavingAccount;
+import com.zakaria.digitalbanking.entities.*;
+import com.zakaria.digitalbanking.enums.OperationType;
 import com.zakaria.digitalbanking.exceptions.BalanceNotSufficientException;
 import com.zakaria.digitalbanking.exceptions.BankAccountNotFoundException;
 import com.zakaria.digitalbanking.exceptions.CustomerNotFoundException;
@@ -92,22 +90,46 @@ public class BankAccountServiceImpl implements BankAccountService{
     }
 
     @Override
-    public void debit(String accountId, double amount, String description) throws BankAccountNotFoundException {
+    public void debit(String accountId, double amount, String description) throws BankAccountNotFoundException, BalanceNotSufficientException {
         BankAccount bankAccount=getBankAccount(accountId);
         if(bankAccount.getBalance()<amount){
             throw new BalanceNotSufficientException("Insufficient balance");
         }
+        AccountOperation accountOperation=new AccountOperation();
+        accountOperation.setOperationType(OperationType.DEBIT);
+        accountOperation.setAmount(amount);
+        accountOperation.setDescription(description);
+        accountOperation.setOperationDate(new Date());
+        accountOperation.setBankAccount(bankAccount);
 
+        accountOperationRepository.save(accountOperation);
 
+        bankAccount.setBalance(bankAccount.getBalance()-amount);
+
+        bankAccountRepository.save(bankAccount);
     }
 
     @Override
-    public void credit(String accountId, double amount, String description) {
+    public void credit(String accountId, double amount, String description) throws BankAccountNotFoundException {
+        BankAccount bankAccount=getBankAccount(accountId);
 
+        AccountOperation accountOperation=new AccountOperation();
+        accountOperation.setOperationType(OperationType.CREDIT);
+        accountOperation.setAmount(amount);
+        accountOperation.setDescription(description);
+        accountOperation.setOperationDate(new Date());
+        accountOperation.setBankAccount(bankAccount);
+
+        accountOperationRepository.save(accountOperation);
+
+        bankAccount.setBalance(bankAccount.getBalance()+amount);
+
+        bankAccountRepository.save(bankAccount);
     }
 
     @Override
-    public void transfer(String accountIdSource, String accountIdDestination, double amount) {
-
+    public void transfer(String accountIdSource, String accountIdDestination, double amount) throws BankAccountNotFoundException, BalanceNotSufficientException {
+        debit(accountIdSource,amount,"Transfer to "+accountIdDestination);
+        credit(accountIdDestination,amount,"Transfer from "+accountIdSource);
     }
 }
