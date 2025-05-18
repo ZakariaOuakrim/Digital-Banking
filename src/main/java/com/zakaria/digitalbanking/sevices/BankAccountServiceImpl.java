@@ -209,7 +209,7 @@ public class BankAccountServiceImpl implements BankAccountService{
         accountHistoryDTO.setCurrentPage(accountOperations.getNumber());
 
 
-        return null;
+        return accountHistoryDTO;
     }
 
 }

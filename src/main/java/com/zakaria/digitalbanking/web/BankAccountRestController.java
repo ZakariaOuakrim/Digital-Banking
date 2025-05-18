@@ -33,11 +33,12 @@ public class BankAccountRestController {
         return bankAccountService.history(accountId);
     }
 
-    @GetMapping("/accounts/{accountId}/pageOperations/{page}/{size}")
-    public AccountHistoryDTO getAccountHistory(@PathVariable String accountId,
-                                               @RequestParam(name = "page",defaultValue = "0") int page,
-                                               @RequestParam(name = "size",defaultValue = "5") int size) throws BankAccountNotFoundException {
-        return bankAccountService.getAccountHistory(accountId, page, size);
+    @GetMapping("/accounts/{accountId}/pageOperations")
+    public AccountHistoryDTO getAccountHistory(
+            @PathVariable String accountId,
+            @RequestParam(name="page",defaultValue = "0") int page,
+            @RequestParam(name="size",defaultValue = "5")int size) throws BankAccountNotFoundException {
+        return bankAccountService.getAccountHistory(accountId,page,size);
     }
 
 
