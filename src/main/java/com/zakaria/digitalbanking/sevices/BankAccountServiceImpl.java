@@ -12,6 +12,8 @@ import com.zakaria.digitalbanking.repositories.BankAccountRepository;
 import com.zakaria.digitalbanking.repositories.CustomerRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -184,6 +186,30 @@ public class BankAccountServiceImpl implements BankAccountService{
         return accountOperations.stream()
                 .map(op->dtoMapper.fromAccountOperationDTO(op))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public AccountHistoryDTO getAccountHistory(String accountId, int page, int size) throws BankAccountNotFoundException {
+        BankAccount bankAccount=bankAccountRepository.findById(accountId).orElse(null);
+        if (bankAccount==null){
+            throw new BankAccountNotFoundException("Bank account not found");
+        }
+        Page<AccountOperation> accountOperations =accountOperationRepository.findByBankAccountId(accountId, PageRequest.of(page, size));
+        AccountHistoryDTO accountHistoryDTO=new AccountHistoryDTO();
+        accountHistoryDTO.setAccountId(accountId);
+        accountHistoryDTO.setAccountOperationDTOS(accountOperations.getContent()
+                .stream().map(op->dtoMapper.fromAccountOperationDTO(op))
+                .collect(Collectors.toList()));
+        accountHistoryDTO.setBalance(bankAccount.getBalance());
+
+        accountHistoryDTO.setCurrentPage(page);
+        accountHistoryDTO.setPageSize(size);
+        accountHistoryDTO.setTotalPages(accountOperations.getTotalPages());
+
+        accountHistoryDTO.setCurrentPage(accountOperations.getNumber());
+
+
+        return null;
     }
 
 }
