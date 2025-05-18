@@ -1,6 +1,9 @@
 package com.zakaria.digitalbanking;
 
+import com.zakaria.digitalbanking.dtos.BankAccountDTO;
+import com.zakaria.digitalbanking.dtos.CurrentBankAccountDTO;
 import com.zakaria.digitalbanking.dtos.CustomerDTO;
+import com.zakaria.digitalbanking.dtos.SavingBankAccountDTO;
 import com.zakaria.digitalbanking.entities.*;
 import com.zakaria.digitalbanking.enums.AccountStatus;
 import com.zakaria.digitalbanking.enums.OperationType;
@@ -41,11 +44,17 @@ public class DigitalBankingApplication {
                 try {
                     bankAccountService.saveCurrentBankAccount(Math.random() * 90000, 900, cust.getId());
                     bankAccountService.saveSavingBankAccount(Math.random() * 90000, 5.5, cust.getId());
-                    List<BankAccount> bankAccountList=bankAccountService.bankAccountList();
-                    for(BankAccount c:bankAccountList){
+                    List<BankAccountDTO> bankAccountList=bankAccountService.bankAccountList();
+                    for(BankAccountDTO c:bankAccountList){
                         for(int i=0;i<10;i++){
-                            bankAccountService.credit(c.getId(),1000+Math.random() * 12000, "Credit");
-                            bankAccountService.debit(c.getId(),1000+Math.random() * 12000, "Debit");
+                            String accountId;
+                            if(c instanceof SavingBankAccountDTO){
+                                accountId = ((SavingBankAccountDTO) c).getId();
+                            } else {
+                                accountId = ((CurrentBankAccountDTO) c).getId();
+                            }
+                            bankAccountService.credit(accountId,1000+Math.random() * 12000, "Credit");
+                            bankAccountService.debit(accountId,1000+Math.random() * 12000, "Debit");
 
                         }
                     }
