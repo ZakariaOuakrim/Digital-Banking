@@ -1,5 +1,6 @@
 package com.zakaria.digitalbanking;
 
+import com.zakaria.digitalbanking.dtos.CustomerDTO;
 import com.zakaria.digitalbanking.entities.*;
 import com.zakaria.digitalbanking.enums.AccountStatus;
 import com.zakaria.digitalbanking.enums.OperationType;
@@ -31,7 +32,7 @@ public class DigitalBankingApplication {
     CommandLineRunner commandLineRunner(BankAccountService bankAccountService){
         return args -> {
             Stream.of("Hassan","Zakaria","Aicha").forEach(name -> {
-                Customer customer = new Customer();
+                CustomerDTO customer = new CustomerDTO();
                 customer.setName(name);
                 customer.setEmail(name + "@gmail.com");
                 bankAccountService.saveCurstomer(customer);

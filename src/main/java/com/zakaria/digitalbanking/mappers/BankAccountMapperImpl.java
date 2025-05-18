@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 //Map struct
 @Service
-public class bankAccountMapperImpl {
+public class BankAccountMapperImpl {
     public CustomerDTO fromCustomer(Customer customer) {
         CustomerDTO customerDTO = new CustomerDTO();
         BeanUtils.copyProperties(customer, customerDTO);
