@@ -3,6 +3,8 @@ package com.zakaria.digitalbanking;
 import com.zakaria.digitalbanking.entities.*;
 import com.zakaria.digitalbanking.enums.AccountStatus;
 import com.zakaria.digitalbanking.enums.OperationType;
+import com.zakaria.digitalbanking.exceptions.BalanceNotSufficientException;
+import com.zakaria.digitalbanking.exceptions.BankAccountNotFoundException;
 import com.zakaria.digitalbanking.exceptions.CustomerNotFoundException;
 import com.zakaria.digitalbanking.repositories.AccountOperationRepository;
 import com.zakaria.digitalbanking.repositories.BankAccountRepository;
@@ -15,6 +17,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -37,9 +40,20 @@ public class DigitalBankingApplication {
                 try {
                     bankAccountService.saveCurrentBankAccount(Math.random() * 90000, 900, cust.getId());
                     bankAccountService.saveSavingBankAccount(Math.random() * 90000, 5.5, cust.getId());
-
+                    List<BankAccount> bankAccountList=bankAccountService.bankAccountList();
+                    for(BankAccount c:bankAccountList){
+                        for(int i=0;i<10;i++){
+                            bankAccountService.credit(c.getId(),1000+Math.random() * 12000, "Credit");
+                            bankAccountService.debit(c.getId(),1000+Math.random() * 12000, "Debit");
+                            
+                        }
+                    }
                 } catch (CustomerNotFoundException e) {
                     e.printStackTrace();
+                } catch (BankAccountNotFoundException e) {
+                    throw new RuntimeException(e);
+                } catch (BalanceNotSufficientException e) {
+                    throw new RuntimeException(e);
                 }
             });
             
