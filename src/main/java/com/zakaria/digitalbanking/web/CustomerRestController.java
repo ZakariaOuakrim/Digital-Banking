@@ -31,4 +31,15 @@ public class CustomerRestController {
         return bankAccountService.saveCurstomer(customerDTO);
     }
 
+    @PutMapping("/customers/{id}")
+    public CustomerDTO updateCustomer(@PathVariable(name="id") Long customerId,@RequestBody  CustomerDTO customerDTO) throws CustomerNotFoundException {
+        customerDTO.setId(customerId);
+        return bankAccountService.updateCustomer(customerDTO);
+    }
+
+    @DeleteMapping("/customers/{id}")
+    public void deleteCustomer(@PathVariable(name="id") Long customerId) {
+        bankAccountService.deleteCustomer(customerId);
+    }
+
 }
