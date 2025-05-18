@@ -1,9 +1,6 @@
 package com.zakaria.digitalbanking.sevices;
 
-import com.zakaria.digitalbanking.dtos.BankAccountDTO;
-import com.zakaria.digitalbanking.dtos.CurrentBankAccountDTO;
-import com.zakaria.digitalbanking.dtos.CustomerDTO;
-import com.zakaria.digitalbanking.dtos.SavingBankAccountDTO;
+import com.zakaria.digitalbanking.dtos.*;
 import com.zakaria.digitalbanking.entities.*;
 import com.zakaria.digitalbanking.enums.OperationType;
 import com.zakaria.digitalbanking.exceptions.BalanceNotSufficientException;
@@ -181,5 +178,12 @@ public class BankAccountServiceImpl implements BankAccountService{
         customerRepository.deleteById(id);
     }
 
-    
+    @Override
+    public List<AccountOperationDTO> history(String accountId){
+        List<AccountOperation> accountOperations=accountOperationRepository.findByBankAccountId(accountId);
+        return accountOperations.stream()
+                .map(op->dtoMapper.fromAccountOperationDTO(op))
+                .collect(Collectors.toList());
+    }
+
 }

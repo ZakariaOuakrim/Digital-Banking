@@ -42,4 +42,5 @@ public class CustomerRestController {
         bankAccountService.deleteCustomer(customerId);
     }
 
+
 }

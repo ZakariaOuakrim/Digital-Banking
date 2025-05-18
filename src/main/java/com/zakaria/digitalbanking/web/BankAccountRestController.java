@@ -1,5 +1,6 @@
 package com.zakaria.digitalbanking.web;
 
+import com.zakaria.digitalbanking.dtos.AccountOperationDTO;
 import com.zakaria.digitalbanking.dtos.BankAccountDTO;
 import com.zakaria.digitalbanking.exceptions.BankAccountNotFoundException;
 import com.zakaria.digitalbanking.sevices.BankAccountService;
@@ -23,5 +24,10 @@ public class BankAccountRestController {
     @GetMapping("/accounts")
     public List<BankAccountDTO> listAccounts() {
         return bankAccountService.bankAccountList();
+    }
+
+    @GetMapping("/accounts/{accountId}/operations")
+    public List<AccountOperationDTO> getHistory(@PathVariable String accountId) throws BankAccountNotFoundException {
+        return bankAccountService.history(accountId);
     }
 }

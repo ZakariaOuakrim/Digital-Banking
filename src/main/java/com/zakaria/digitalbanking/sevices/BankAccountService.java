@@ -1,9 +1,6 @@
 package com.zakaria.digitalbanking.sevices;
 
-import com.zakaria.digitalbanking.dtos.BankAccountDTO;
-import com.zakaria.digitalbanking.dtos.CurrentBankAccountDTO;
-import com.zakaria.digitalbanking.dtos.CustomerDTO;
-import com.zakaria.digitalbanking.dtos.SavingBankAccountDTO;
+import com.zakaria.digitalbanking.dtos.*;
 import com.zakaria.digitalbanking.entities.BankAccount;
 import com.zakaria.digitalbanking.entities.CurrentAccount;
 import com.zakaria.digitalbanking.entities.Customer;
@@ -32,4 +29,6 @@ public interface BankAccountService {
     CustomerDTO updateCustomer(CustomerDTO customerDTO);
 
     void deleteCustomer(Long id);
+
+    List<AccountOperationDTO> history(String accountId);
 }

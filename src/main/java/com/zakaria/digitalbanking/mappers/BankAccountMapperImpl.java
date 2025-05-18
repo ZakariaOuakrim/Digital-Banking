@@ -1,8 +1,10 @@
 package com.zakaria.digitalbanking.mappers;
 
+import com.zakaria.digitalbanking.dtos.AccountOperationDTO;
 import com.zakaria.digitalbanking.dtos.CurrentBankAccountDTO;
 import com.zakaria.digitalbanking.dtos.CustomerDTO;
 import com.zakaria.digitalbanking.dtos.SavingBankAccountDTO;
+import com.zakaria.digitalbanking.entities.AccountOperation;
 import com.zakaria.digitalbanking.entities.CurrentAccount;
 import com.zakaria.digitalbanking.entities.Customer;
 import com.zakaria.digitalbanking.entities.SavingAccount;
@@ -54,6 +56,14 @@ public class BankAccountMapperImpl {
         currentAccount.setCustomer(fromCustomerDTO(currentBankAccountDTO.getCustomerDTO()));
         return currentAccount;
     }
+
+    public AccountOperationDTO fromAccountOperationDTO(AccountOperation accountOperationDTO){
+        AccountOperationDTO accountOperation=new AccountOperationDTO();
+        BeanUtils.copyProperties(accountOperationDTO,accountOperation);
+        return accountOperation;
+    }
+
+
 
 
 }
