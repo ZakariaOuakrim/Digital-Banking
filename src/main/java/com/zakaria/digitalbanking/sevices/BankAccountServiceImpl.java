@@ -76,7 +76,7 @@ public class BankAccountServiceImpl implements BankAccountService{
 
     @Override
     public List<Customer> listCustomers() {
-        return List.of();
+        return customerRepository.findAll();
     }
 
     @Override

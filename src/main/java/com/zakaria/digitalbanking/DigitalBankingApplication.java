@@ -27,7 +27,7 @@ public class DigitalBankingApplication {
     public static void main(String[] args) {
         SpringApplication.run(DigitalBankingApplication.class, args);
     }
-    @Bean
+    //@Bean
     CommandLineRunner commandLineRunner(BankAccountService bankAccountService){
         return args -> {
             Stream.of("Hassan","Zakaria","Aicha").forEach(name -> {
@@ -45,7 +45,7 @@ public class DigitalBankingApplication {
                         for(int i=0;i<10;i++){
                             bankAccountService.credit(c.getId(),1000+Math.random() * 12000, "Credit");
                             bankAccountService.debit(c.getId(),1000+Math.random() * 12000, "Debit");
-                            
+
                         }
                     }
                 } catch (CustomerNotFoundException e) {
