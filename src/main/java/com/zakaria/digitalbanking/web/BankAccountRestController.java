@@ -11,6 +11,8 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin("*")
+
 public class BankAccountRestController {
     private BankAccountService bankAccountService;
 
