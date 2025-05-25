@@ -63,6 +63,12 @@ public class BankAccountMapperImpl {
         return accountOperation;
     }
 
+    public AccountOperationDTO fromAccountOperation(AccountOperation accountOperation){
+        AccountOperationDTO accountOperationDTO=new AccountOperationDTO();
+        BeanUtils.copyProperties(accountOperation,accountOperationDTO);
+        return accountOperationDTO;
+    }
+
 
 
 
